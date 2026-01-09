@@ -1,0 +1,17 @@
+{
+  "name": "yjp-agent",
+  "version": "1.0.0",
+  "description": "NestJS + React Full Stack Application",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && npm run start:dev",
+    "dev:client": "cd client && npm start",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "start:server": "cd server && npm run start:prod",
+    "start:client": "cd client && npm start"
+  },
+  "keywords": ["nestjs", "react", "typescript", "fullstack"],
+  "author": "",
+  "license": "ISC"
+}
