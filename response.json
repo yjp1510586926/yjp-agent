@@ -1,0 +1,76 @@
+{
+  "id": "resp_0884b5e07f843e9b0069650cf972f881a38e9e01a482121845",
+  "object": "response",
+  "created_at": 1768230137,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768230215,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_0884b5e07f843e9b0069650cf9d30081a385ee893bbe517d91",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_0884b5e07f843e9b0069650d3a383881a3b637d8291762ea78",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: server/src/main.ts\n\nimport { NestFactory } from '@nestjs/core';\nimport { AppModule } from './app.module';\nimport * as express from 'express';\n\ntype Task = {\n  id: number;\n  title: string;\n  completed: boolean;\n  createdAt: string;\n};\n\n/**\n * In-memory task store.\n * This is a lightweight bootstrap to satisfy the TODO task without introducing\n * additional database dependencies. Data will reset when the server restarts.\n */\nconst tasks: Task[] = [];\n\nasync function bootstrap() {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors();\n  app.use(express.json());\n\n  // List tasks\n  app.get('/tasks', (req: any, res: any) => {\n    res.json(tasks);\n  });\n\n  // Create a new task\n  app.post('/tasks', (req: any, res: any) => {\n    const { title } = req.body;\n    if (!title || typeof title !== 'string') {\n      res.status(400).json({ error: 'title is required' });\n      return;\n    }\n    const t: Task = {\n      id: Date.now(),\n      title,\n      completed: false,\n      createdAt: new Date().toISOString(),\n    };\n    tasks.push(t);\n    res.json(t);\n  });\n\n  // Update a task (title or completed)\n  app.patch('/tasks/:id', (req: any, res: any) => {\n    const id = Number(req.params.id);\n    const t = tasks.find((x) => x.id === id);\n    if (!t) {\n      res.status(404).json({ error: 'Not found' });\n      return;\n    }\n    if (req.body.title !== undefined) t.title = req.body.title;\n    if (req.body.completed !== undefined) t.completed = req.body.completed;\n    res.json(t);\n  });\n\n  // Delete a task\n  app.delete('/tasks/:id', (req: any, res: any) => {\n    const id = Number(req.params.id);\n    const idx = tasks.findIndex((x) => x.id === id);\n    if (idx >= 0) tasks.splice(idx, 1);\n    res.status(204).send();\n  });\n\n  await app.listen(3001);\n}\nbootstrap();\n### END_FILE\n\n### FILE: client/src/components/TodoApp.tsx\n\nimport React, { useEffect, useState } from 'react';\nimport axios from 'axios';\n\nexport type TodoItem = {\n  id: number;\n  title: string;\n  completed: boolean;\n  createdAt: string;\n};\n\nconst TodoApp: React.FC = () => {\n  const [tasks, setTasks] = useState<TodoItem[]>([]);\n  const [title, setTitle] = useState<string>('');\n\n  useEffect(() => {\n    fetchTasks();\n  }, []);\n\n  const fetchTasks = async () => {\n    try {\n      const res = await axios.get<TodoItem[]>('/tasks');\n      setTasks(res.data);\n    } catch (err) {\n      console.error('Failed to fetch tasks', err);\n    }\n  };\n\n  const addTask = async () => {\n    if (!title.trim()) return;\n    const res = await axios.post<TodoItem>('/tasks', { title });\n    setTasks((prev) => [...prev, res.data]);\n    setTitle('');\n  };\n\n  const toggle = async (id: number) => {\n    const t = tasks.find((x) => x.id === id);\n    if (!t) return;\n    await axios.patch(`/tasks/${id}`, { completed: !t.completed });\n    setTasks((prev) =>\n      prev.map((x) => (x.id === id ? { ...x, completed: !x.completed } : x))\n    );\n  };\n\n  const remove = async (id: number) => {\n    await axios.delete(`/tasks/${id}`);\n    setTasks((prev) => prev.filter((t) => t.id !== id));\n  };\n\n  return (\n    <div style={{ padding: '16px', maxWidth: 600 }}>\n      <h2>Tasks</h2>\n      <div>\n        <input\n          value={title}\n          onChange={(e) => setTitle(e.target.value)}\n          placeholder=\"New task\"\n          onKeyDown={(e) => {\n            if (e.key === 'Enter') addTask();\n          }}\n        />\n        <button onClick={addTask} style={{ marginLeft: 8 }}>\n          Add\n        </button>\n      </div>\n      <ul style={{ listStyle: 'none', padding: 0, marginTop: 12 }}>\n        {tasks.map((t) => (\n          <li\n            key={t.id}\n            style={{\n              display: 'flex',\n              alignItems: 'center',\n              gap: 8,\n              padding: '6px 0',\n            }}\n          >\n            <input\n              type=\"checkbox\"\n              checked={t.completed}\n              onChange={() => toggle(t.id)}\n            />\n            <span style={{ textDecoration: t.completed ? 'line-through' : 'none' }}>\n              {t.title}\n            </span>\n            <button onClick={() => remove(t.id)} style={{ marginLeft: 'auto' }}>\n              Delete\n            </button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n};\n\nexport default TodoApp;\n### END_FILE\n\n### FILE: client/src/App.tsx\n\nimport React from 'react';\nimport TodoApp from './components/TodoApp';\n\nconst App: React.FC = () => {\n  return (\n    <div style={{ padding: 16 }}>\n      <h1>Web3 Fullstack Demo</h1>\n      <TodoApp />\n    </div>\n  );\n};\n\nexport default App;\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1156,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 7294,
+    "output_tokens_details": {
+      "reasoning_tokens": 6080
+    },
+    "total_tokens": 8450
+  },
+  "user": null,
+  "metadata": {}
+}
