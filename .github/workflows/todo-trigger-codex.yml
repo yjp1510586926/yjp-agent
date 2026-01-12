@@ -6,7 +6,7 @@ on:
       - main
       - develop
     paths:
-      - 'todo.md'
+      - "todo.md"
 
 jobs:
   notify-codex:
@@ -15,15 +15,15 @@ jobs:
 
     # 添加权限配置
     permissions:
-      contents: read      # 读取仓库内容
-      issues: write       # 创建和编辑 Issues
-      pull-requests: write  # 创建评论（可选）
+      contents: read # 读取仓库内容
+      issues: write # 创建和编辑 Issues
+      pull-requests: write # 创建评论（可选）
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # 需要获取前一次提交来比较差异
+          fetch-depth: 2 # 需要获取前一次提交来比较差异
 
       - name: Get changed tasks
         id: changes
@@ -125,26 +125,24 @@ jobs:
               labels: ['codex-task', 'auto-generated']
             });
 
-      - name: Trigger Codex webhook (if configured)
+      - name: Trigger AI Agent (Custom Config)
         if: steps.parse.outputs.found_tasks == 'true'
         run: |
-          # 如果你有配置 Codex webhook，可以在这里触发
-          # 例如调用 Codex Cloud API
+          echo "Triggering AI Agent..."
 
-          echo "Triggering Codex webhook..."
-
-          # 示例（需要替换为实际的 webhook URL 和 token）
-          # curl -X POST "https://codex-api.example.com/webhook" \
-          #   -H "Authorization: Bearer ${{ secrets.CODEX_TOKEN }}" \
-          #   -H "Content-Type: application/json" \
-          #   -d '{
-          #     "event": "todo_changed",
-          #     "repository": "${{ github.repository }}",
-          #     "file": "todo.md",
-          #     "commit": "${{ github.sha }}"
-          #   }'
-
-          echo "Webhook trigger completed (or skipped if not configured)"
+          # Construct JSON payload securely using jq
+          # Using the specific model and endpoint requested
+          jq -n \
+            --arg model "gpt-5-nano" \
+            --rawfile input new_tasks.txt \
+            --argjson store true \
+            '{model: $model, input: $input, store: $store}' > payload.json
+            
+          # Execute the request
+          curl https://api.openai.com/v1/responses \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+            -d @payload.json
 
       - name: Upload todo.md as artifact
         if: steps.changes.outputs.has_changes == 'true'
