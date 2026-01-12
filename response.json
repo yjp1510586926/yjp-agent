@@ -1,0 +1,76 @@
+{
+  "id": "resp_067f4604d1fbc51000696509b14b8c81a382006547192816d9",
+  "object": "response",
+  "created_at": 1768229297,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768229355,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_067f4604d1fbc51000696509b1908c81a39ff19525ec058658",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_067f4604d1fbc51000696509df01d881a3a1047bdddc9ea1f6",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: server/src/todos/todo.entity.ts\n\nexport interface Todo {\n  id: number;\n  title: string;\n  completed: boolean;\n  createdAt: string;\n}\n\n### END_FILE\n\n### FILE: server/src/todos/dto/create-todo.dto.ts\n\nexport class CreateTodoDto {\n  title: string;\n}\n\n### END_FILE\n\n### FILE: server/src/todos/dto/update-todo.dto.ts\n\nexport class UpdateTodoDto {\n  title?: string;\n  completed?: boolean;\n}\n\n### END_FILE\n\n### FILE: server/src/todos/todos.service.ts\n\nimport { Injectable } from '@nestjs/common';\nimport { Todo } from './todo.entity';\nimport { CreateTodoDto } from './dto/create-todo.dto';\nimport { UpdateTodoDto } from './dto/update-todo.dto';\n\n@Injectable()\nexport class TodosService {\n  private todos: Todo[] = [];\n  private nextId = 1;\n\n  findAll(): Todo[] {\n    return this.todos;\n  }\n\n  create(dto: CreateTodoDto): Todo {\n    const todo: Todo = {\n      id: this.nextId++,\n      title: dto.title,\n      completed: false,\n      createdAt: new Date().toISOString(),\n    };\n    this.todos.push(todo);\n    return todo;\n  }\n\n  update(id: number, dto: UpdateTodoDto): Todo | undefined {\n    const index = this.todos.findIndex(t => t.id === id);\n    if (index === -1) {\n      return undefined;\n    }\n    const t = this.todos[index];\n    if (dto.title !== undefined) {\n      t.title = dto.title;\n    }\n    if (dto.completed !== undefined) {\n      t.completed = dto.completed;\n    }\n    this.todos[index] = t;\n    return t;\n  }\n\n  remove(id: number): boolean {\n    const index = this.todos.findIndex(t => t.id === id);\n    if (index === -1) {\n      return false;\n    }\n    this.todos.splice(index, 1);\n    return true;\n  }\n}\n\n### END_FILE\n\n### FILE: server/src/todos/todos.controller.ts\n\nimport { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';\nimport { TodosService } from './todos.service';\nimport { CreateTodoDto } from './dto/create-todo.dto';\nimport { UpdateTodoDto } from './dto/update-todo.dto';\nimport { Todo } from './todo.entity';\n\n@Controller('api')\nexport class TodosController {\n  constructor(private readonly todosService: TodosService) {}\n\n  @Get('todos')\n  findAll(): Todo[] {\n    return this.todosService.findAll();\n  }\n\n  @Post('todos')\n  create(@Body() dto: CreateTodoDto): Todo {\n    return this.todosService.create(dto);\n  }\n\n  @Put('todos/:id')\n  update(@Param('id') id: string, @Body() dto: UpdateTodoDto): Todo | undefined {\n    const numericId = Number(id);\n    return this.todosService.update(numericId, dto);\n  }\n\n  @Delete('todos/:id')\n  remove(@Param('id') id: string): { success: boolean } {\n    const numericId = Number(id);\n    return { success: this.todosService.remove(numericId) };\n  }\n}\n\n### END_FILE\n\n### FILE: server/src/todos/todos.module.ts\n\nimport { Module } from '@nestjs/common';\nimport { TodosService } from './todos.service';\nimport { TodosController } from './todos.controller';\n\n@Module({\n  controllers: [TodosController],\n  providers: [TodosService],\n})\nexport class TodosModule {}\n\n### END_FILE\n\n### FILE: server/src/app.module.ts\n\nimport { Module } from '@nestjs/common';\nimport { AppController } from './app.controller';\nimport { AppService } from './app.service';\nimport { TodosModule } from './todos/todos.module';\n\n@Module({\n  imports: [TodosModule],\n  controllers: [AppController],\n  providers: [AppService],\n})\nexport class AppModule {}\n\n### END_FILE\n\n### FILE: client/src/App.tsx\n\nimport React, { useEffect, useState, FormEvent } from 'react';\nimport axios from 'axios';\n\ntype Todo = {\n  id: number;\n  title: string;\n  completed: boolean;\n  createdAt: string;\n};\n\nconst App: React.FC = () => {\n  const [todos, setTodos] = useState<Todo[]>([]);\n  const [title, setTitle] = useState('');\n\n  const fetchTodos = async () => {\n    try {\n      const res = await axios.get<Todo[]>('/api/todos');\n      setTodos(res.data);\n    } catch (err) {\n      console.error(err);\n    }\n  };\n\n  useEffect(() => {\n    fetchTodos();\n  }, []);\n\n  const addTodo = async (e: FormEvent) => {\n    e.preventDefault();\n    if (!title.trim()) return;\n    const res = await axios.post<Todo>('/api/todos', { title });\n    setTodos(prev => [...prev, res.data]);\n    setTitle('');\n  };\n\n  const toggle = async ( todo: Todo ) => {\n    const res = await axios.put<Todo>(`/api/todos/${todo.id}`, { completed: !todo.completed });\n    setTodos(prev => prev.map(t => (t.id === todo.id ? res.data : t)));\n  };\n\n  const remove = async (id: number) => {\n    await axios.delete(`/api/todos/${id}`);\n    setTodos(prev => prev.filter(t => t.id !== id));\n  };\n\n  return (\n    <div style={{ padding: 20 }}>\n      <h1>Todos</h1>\n      <form onSubmit={addTodo} style={{ display: 'flex', gap: 8, marginBottom: 12 }}>\n        <input\n          value={title}\n          onChange={e => setTitle(e.target.value)}\n          placeholder=\"New todo\"\n          style={{ flex: 1, padding: '8px 10px' }}\n        />\n        <button type=\"submit\">Add</button>\n      </form>\n      <ul style={{ listStyle: 'none', padding: 0 }}>\n        {todos.map(t => (\n          <li key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0' }}>\n            <input type=\"checkbox\" checked={t.completed} onChange={() => toggle(t)} />\n            <span style={{ textDecoration: t.completed ? 'line-through' : 'none' }}>{t.title}</span>\n            <span style={{ marginLeft: 'auto', color: '#888', fontSize: 12 }}>{new Date(t.createdAt).toLocaleString()}</span>\n            <button onClick={() => remove(t.id)} style={{ marginLeft: 8 }}>Delete</button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n};\n\nexport default App;\n\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1156,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 6832,
+    "output_tokens_details": {
+      "reasoning_tokens": 5376
+    },
+    "total_tokens": 7988
+  },
+  "user": null,
+  "metadata": {}
+}
