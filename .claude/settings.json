@@ -1,32 +1,32 @@
 {
   "permissions": {
     "allow": [
-      "npm install",
-      "npm run *",
-      "npx *",
-      "node *",
-      "git status",
-      "git diff *",
-      "git log *",
-      "git add *",
-      "git commit *",
-      "git branch *",
-      "git checkout *",
-      "ls *",
-      "pwd",
-      "which *",
-      "echo *"
+      "Npm install",
+      "Npm run *",
+      "Npx *",
+      "Node *",
+      "Git status",
+      "Git diff *",
+      "Git log *",
+      "Git add *",
+      "Git commit *",
+      "Git branch *",
+      "Git checkout *",
+      "Ls *",
+      "Pwd",
+      "Which *",
+      "Echo *"
     ],
-    "deny": [
-      "rm -rf /",
-      "git push --force *",
-      "git reset --hard *"
-    ]
+    "deny": ["Rm -rf /", "Git push --force *", "Git reset --hard *"]
   },
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/edy/Documents/web3/yjp-agent"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/edy/Documents/web3/yjp-agent"
+      ]
     }
   },
   "hooks": {
