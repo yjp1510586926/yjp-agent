@@ -14,14 +14,18 @@ PRD/设计稿 → Claude 生成计划 → Codex 开发 → PR → Claude 审查 
 ### 快速开始 AI 工作流
 
 1. **📖 [快速开始指南](./docs/QUICK-START.md)** - 5分钟上手 AI 开发流程
-2. **📚 [完整工作流文档](./docs/AI-WORKFLOW.md)** - 详细的 AI 驱动开发指南
-3. **📋 [开发计划模板](./docs/templates/plan-template.md)** - Claude 生成计划的模板
-4. **🔌 [API 文档模板](./docs/templates/api-template.md)** - API 接口设计模板
+2. **🤖 [Codex 使用指南](./docs/CODEX-GUIDE.md)** - Codex Cloud/插件详细使用方法
+3. **📚 [完整工作流文档](./docs/AI-WORKFLOW.md)** - 详细的 AI 驱动开发指南
+4. **📋 [开发计划模板](./docs/templates/plan-template.md)** - Claude 生成计划的模板
+5. **🔌 [API 文档模板](./docs/templates/api-template.md)** - API 接口设计模板
 
 ### AI 工具配置
 
 - **Claude Code CLI**: 用于架构设计、代码审查、部署检查
-- **Cursor/Copilot**: 用于具体代码实现
+- **Codex**: 用于具体代码实现
+  - Codex Cloud 网页版（推荐）
+  - VS Code Codex 插件
+  - 或其他替代方案（Cursor、GitHub Copilot）
 - **GitHub Actions**: 自动化测试和部署
 
 ---
