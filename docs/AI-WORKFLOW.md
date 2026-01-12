@@ -93,23 +93,38 @@ git checkout -b feature/issue-123-功能名称
 #### 2.2 使用 Codex 编写代码
 
 **推荐工具：**
-- **Cursor**（推荐）: AI 驱动的 IDE，内置 Codex
+- **Codex Cloud 网页版**（推荐）: 云端开发环境，内置 AI 助手
+- **VS Code + Codex 插件**: 本地开发 + AI 辅助
+- **Cursor**: AI 驱动的 IDE
 - **GitHub Copilot**: VS Code 插件
 - **Codeium**: 免费替代方案
 
 **开发步骤：**
 
 1. 打开 Claude 生成的计划文档
-2. 在 Cursor/VS Code 中按照计划逐步实现
+
+2. 在开发环境中按照计划逐步实现
+
 3. 使用 AI 辅助：
+
+   **Codex Cloud / Codex 插件：**
    ```
-   Copilot: 根据 docs/plans/xxx.md 实现用户登录功能
+   根据 docs/plans/xxx.md 实现用户登录功能
+   ```
+
+   **GitHub Copilot：**
+   ```
+   // 根据计划实现用户登录 API
+   // Copilot 会自动补全代码
    ```
 
 4. 编写测试用例：
    ```
-   Copilot: 为 UserService 编写单元测试
+   为 UserService 编写完整的单元测试
+   覆盖所有主要场景和边界条件
    ```
+
+**📖 详细使用指南**: [Codex 使用指南](./CODEX-GUIDE.md)
 
 #### 2.3 本地测试
 
@@ -233,15 +248,38 @@ GitHub Actions 会自动触发部署流程：
 
 ## 🛠️ 工具配置
 
-### 1. Codex 配置（Cursor 推荐）
+### 1. Codex 配置
 
-**安装 Cursor：**
+**方式 A: Codex Cloud 网页版（推荐）**
+
+```bash
+# 访问你的 Codex Cloud 平台
+# 登录账号
+# 导入 GitHub 仓库：yjp1510586926/yjp-agent
+# 配置环境和 AI 设置
+```
+
+**方式 B: VS Code + Codex 插件**
+
+```bash
+# 安装 Codex 插件
+# 在 VS Code 中：Ctrl+P / Cmd+P
+ext install codex-ai
+
+# 配置插件设置
+# 添加 API Key（如需要）
+```
+
+**方式 C: Cursor（可选）**
+
 ```bash
 # 下载：https://cursor.sh/
 # 配置 AI 模型为 GPT-4 或 Claude
 ```
 
-**Cursor 配置文件（`.cursorrules`）：**
+**项目规范配置（适用所有工具）：**
+
+创建 `.cursorrules` 或 `.ai-rules` 文件：
 ```
 # 项目规范
 - 使用 TypeScript 严格模式
@@ -260,6 +298,8 @@ GitHub Actions 会自动触发部署流程：
 - test: 测试
 - chore: 构建/工具
 ```
+
+**📖 详细配置指南**: [Codex 使用指南](./CODEX-GUIDE.md)
 
 ### 2. Claude Code 配置
 
@@ -306,7 +346,7 @@ claude> 请分析 Issue #123 并生成开发计划
 # 1. 创建分支
 git checkout -b feature/issue-123-user-login
 
-# 2. 在 Cursor 中实现
+# 2. 在 Codex 中实现（Cloud 网页版或本地插件）
 # - server/src/auth/auth.controller.ts
 # - server/src/auth/auth.service.ts
 # - client/src/pages/Login.tsx
@@ -403,9 +443,14 @@ claude> /deploy-check
 
 ### Q4: 两个 AI 的成本如何控制？
 **A:**
-- Codex: 使用 Cursor 订阅（$20/月）或 GitHub Copilot（$10/月）
-- Claude: 使用 Claude Pro（$20/月）或 API（按需付费）
-- 总成本约 $40-50/月
+- **Codex 方案**：
+  - Codex Cloud 订阅（价格视平台而定）
+  - 或 GitHub Copilot（$10/月）
+  - 或 Cursor（$20/月）
+- **Claude**:
+  - Claude Pro（$20/月）
+  - 或 API 按需付费
+- **总成本**: 约 $30-40/月（根据选择的工具）
 
 ---
 

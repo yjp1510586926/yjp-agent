@@ -40,19 +40,36 @@ cd /path/to/yjp-agent
 # claude init
 ```
 
-### 1.3 安装 Cursor（推荐）
+### 1.3 安装 Codex 开发工具
 
-1. 访问 https://cursor.sh/
-2. 下载并安装
-3. 登录 Claude 或 GPT-4 账号
-4. 打开项目：File → Open Folder → 选择 `yjp-agent`
+**方式 1: Codex Cloud 网页版（推荐）**
 
-**或者使用 GitHub Copilot:**
+1. 访问你的 Codex Cloud 平台
+2. 登录账号
+3. 导入项目：连接 GitHub 选择 `yjp-agent` 仓库
+4. 开始开发
+
+**方式 2: VS Code + Codex 插件**
 
 ```bash
-# VS Code 安装 GitHub Copilot 插件
+# 在 VS Code 中安装 Codex 插件
+Ctrl+P / Cmd+P
+ext install codex-ai
+
+# 配置 API Key（如需要）
+```
+
+**方式 3: 其他替代方案**
+
+```bash
+# Cursor（集成 AI 的编辑器）
+# 访问 https://cursor.sh/
+
+# GitHub Copilot
 code --install-extension GitHub.copilot
 ```
+
+**📖 详细使用指南**: [Codex 使用指南](./CODEX-GUIDE.md)
 
 ---
 
@@ -142,58 +159,74 @@ Claude 会自动：
 
 #### 3.3 使用 Codex 实现代码
 
-**在 Cursor 中：**
+**方式 A: 使用 Codex Cloud 网页版**
 
 1. **创建开发分支**
    ```bash
+   # 在 Codex Cloud 终端
    git checkout -b feature/issue-123-user-login
    ```
 
 2. **打开计划文档**
-   - 打开 `docs/plans/user-login-plan.md`
-   - 查看任务清单
+   - 在 Codex Cloud 中打开 `docs/plans/user-login-plan.md`
+   - 阅读计划和任务清单
 
 3. **使用 AI 辅助开发**
 
-   **后端实现：**
-   - 打开 `server/src/`
-   - 按 `Cmd+K` (Mac) 或 `Ctrl+K` (Windows)
-   - 输入提示词：
-
+   **后端实现 - 在 Codex 输入框中输入：**
    ```
    根据 docs/plans/user-login-plan.md 和 docs/api/user-login-api.md
    实现用户登录功能：
-   1. 创建 auth module
-   2. 实现 login API
+   1. 在 server/src/modules/ 创建 auth 模块
+   2. 实现 login API 接口
    3. 实现 JWT 认证
-   4. 添加单元测试
+   4. 添加 DTO 验证
+   5. 编写单元测试
    ```
 
-   **前端实现：**
-   - 打开 `client/src/`
-   - 按 `Cmd+K` (Mac) 或 `Ctrl+K` (Windows)
-   - 输入提示词：
-
+   **前端实现 - 在 Codex 输入框中输入：**
    ```
    根据 docs/plans/user-login-plan.md
    实现登录页面：
-   1. 创建 Login 页面组件
-   2. 实现表单验证
+   1. 在 client/src/pages/ 创建 Login.tsx
+   2. 实现表单和验证
    3. 集成登录 API
-   4. 添加错误处理
+   4. 添加错误处理和加载状态
+   5. 编写组件测试
    ```
 
-4. **本地测试**
+4. **测试代码**
    ```bash
-   # 测试后端
+   # 在 Codex Cloud 终端
    cd server && npm test
-
-   # 测试前端
    cd client && npm test
 
-   # 手动测试
-   # 访问 http://localhost:3001/login
+   # 启动开发服务器验证
+   npm run dev:server
+   npm run dev:client
    ```
+
+**方式 B: 使用本地 VS Code + Codex 插件**
+
+1. **创建分支并打开项目**
+   ```bash
+   git checkout -b feature/issue-123-user-login
+   code .
+   ```
+
+2. **使用 Codex 插件**
+   - 打开文件
+   - 按快捷键唤起 Codex (Ctrl+Shift+A)
+   - 输入上述提示词
+   - 或者写注释让 Codex 自动补全
+
+3. **本地测试**
+   ```bash
+   cd server && npm test
+   cd client && npm test
+   ```
+
+**📖 详细 Codex 使用方法**: 参考 [Codex 使用指南](./CODEX-GUIDE.md)
 
 ---
 
@@ -443,12 +476,19 @@ rm -rf ~/.claude
 claude auth login
 ```
 
-### Cursor AI 不工作
+### Codex 不工作
 
+**Codex Cloud 网页版：**
 1. 检查网络连接
-2. 重新登录账号
-3. 检查订阅状态
-4. 重启 Cursor
+2. 刷新页面
+3. 重新登录账号
+4. 检查订阅状态
+
+**Codex 插件：**
+1. 检查插件是否启用
+2. 重新加载 VS Code 窗口
+3. 检查 API Key 配置
+4. 查看插件日志排查问题
 
 ### GitHub Actions 失败
 
