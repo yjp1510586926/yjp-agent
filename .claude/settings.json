@@ -1,0 +1,56 @@
+{
+  "permissions": {
+    "allow": [
+      "npm install",
+      "npm run *",
+      "npx *",
+      "node *",
+      "git status",
+      "git diff *",
+      "git log *",
+      "git add *",
+      "git commit *",
+      "git branch *",
+      "git checkout *",
+      "ls *",
+      "pwd",
+      "which *",
+      "echo *"
+    ],
+    "deny": [
+      "rm -rf /",
+      "git push --force *",
+      "git reset --hard *"
+    ]
+  },
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/edy/Documents/web3/yjp-agent"]
+    }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(js|ts|jsx|tsx|json)$ ]]; then npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true; fi"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"任务完成\" with title \"Claude Code\"' 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
