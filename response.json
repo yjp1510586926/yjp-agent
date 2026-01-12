@@ -1,0 +1,76 @@
+{
+  "id": "resp_0735c86f4a703b63006964f7733fc48194832767421bc35aab",
+  "object": "response",
+  "created_at": 1768224627,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768224680,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_0735c86f4a703b63006964f773b3b08194b071ddb36c31f509",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_0735c86f4a703b63006964f7a202f08194b88daf250956a339",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: server/src/app.service.ts\n\nimport { Injectable } from '@nestjs/common';\nimport * as fs from 'fs';\nimport * as path from 'path';\n\nexport interface TodoItem {\n  text: string;\n  done: boolean;\n}\n\n@Injectable()\nexport class AppService {\n  getHello(): string {\n    return 'Hello World';\n  }\n\n  getTodosFromFile(): TodoItem[] {\n    // Path to root/todo.md from server/src\n    const filePath = path.join(__dirname, '..', '..', 'todo.md');\n    let content = '';\n    try {\n      content = fs.readFileSync(filePath, 'utf8');\n    } catch (e) {\n      // If file not exists or unreadable, return empty array\n      content = '';\n    }\n\n    const items: TodoItem[] = [];\n    const lines = content.split(/\\r?\\n/);\n    for (const line of lines) {\n      const trimmed = line.trim();\n      // Match markdown task syntax: - [ ] Task or - [x] Task\n      const m = /^-\\s*\\[( |x|X)\\]\\s*(.*)$/.exec(trimmed);\n      if (m) {\n        const done = /^-\\s*\\[(x|X)\\]/.test(trimmed);\n        const text = m[2].trim();\n        items.push({ text, done });\n      }\n    }\n    return items;\n  }\n}\n\n### END_FILE\n\n### FILE: server/src/app.controller.ts\n\nimport { Controller, Get } from '@nestjs/common';\nimport { AppService, TodoItem } from './app.service';\n\n@Controller()\nexport class AppController {\n  constructor(private readonly appService: AppService) {}\n\n  @Get()\n  getHello(): string {\n    return this.appService.getHello();\n  }\n\n  @Get('todos')\n  getTodos(): TodoItem[] {\n    return this.appService.getTodosFromFile();\n  }\n}\n\n### END_FILE\n\n### FILE: client/src/App.tsx\n\nimport React, { useEffect, useState } from 'react';\nimport './App.css';\nimport axios from 'axios';\n\ntype TodoItem = {\n  text: string;\n  done: boolean;\n};\n\nfunction App(): JSX.Element {\n  const [todos, setTodos] = useState<TodoItem[]>([]);\n  const [loading, setLoading] = useState<boolean>(true);\n\n  const loadTodos = async () => {\n    try {\n      const res = await axios.get<TodoItem[]>('/todos');\n      setTodos(res.data ?? []);\n    } catch (err) {\n      console.error('Failed to load todos from server', err);\n      setTodos([]);\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  useEffect(() => {\n    loadTodos();\n  }, []);\n\n  return (\n    <div className=\"App\">\n      <header className=\"App-header\">\n        <h1>Web3 Fullstack Demo</h1>\n      </header>\n      <main>\n        <section>\n          <h2>Server Todo</h2>\n          {loading ? (\n            <p>Loading...</p>\n          ) : (\n            <ul>\n              {todos.map((t, idx) => (\n                <li key={idx} style={{ textDecoration: t.done ? 'line-through' : 'none' }}>\n                  {t.text} {t.done ? '(done)' : ''}\n                </li>\n              ))}\n            </ul>\n          )}\n        </section>\n      </main>\n    </div>\n  );\n}\n\nexport default App;\n\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1116,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 5088,
+    "output_tokens_details": {
+      "reasoning_tokens": 4352
+    },
+    "total_tokens": 6204
+  },
+  "user": null,
+  "metadata": {}
+}
