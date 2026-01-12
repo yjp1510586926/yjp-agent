@@ -1,0 +1,24 @@
+[Unit]
+Description=GitHub PR Watcher for Claude Auto Review
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/user/yjp-agent
+ExecStart=/home/user/yjp-agent/scripts/pr-watcher.sh watch
+Restart=always
+RestartSec=10
+
+# 环境变量
+Environment="GITHUB_REPOSITORY_OWNER=yjp1510586926"
+Environment="GITHUB_REPOSITORY_NAME=yjp-agent"
+Environment="PR_CHECK_INTERVAL=300"
+
+# 日志
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pr-watcher
+
+[Install]
+WantedBy=multi-user.target

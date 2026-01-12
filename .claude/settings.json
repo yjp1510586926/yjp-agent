@@ -25,8 +25,18 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/edy/Documents/web3/yjp-agent"
+        "/home/user/yjp-agent"
       ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
     }
   },
   "hooks": {
@@ -36,7 +46,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(js|ts|jsx|tsx|json)$ ]]; then npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true; fi"
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.ts|*.jsx|*.tsx|*.json) npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac"
           }
         ]
       }
