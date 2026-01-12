@@ -417,4 +417,4 @@ CREATE TABLE users (
 
 ## 完成以下需求：
 
-更新实现一个功能：前端首页轮播，参考库：（https://reactbits.dev）
+新建一个 home 页面，并实现一个功能：轮播、参考库：（https://reactbits.dev）
