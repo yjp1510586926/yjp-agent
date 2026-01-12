@@ -1,6 +1,30 @@
-# NestJS + React 全栈项目
+# 🚀 NestJS + React 全栈项目
 
-这是一个基于 NestJS 和 React 构建的全栈应用示例项目。
+这是一个基于 NestJS 和 React 构建的全栈应用示例项目，采用 **AI 驱动开发工作流**。
+
+## 🤖 AI 驱动开发
+
+本项目使用 **Claude（技术总监）+ Codex（开发工程师）** 的协作模式：
+
+```
+PRD/设计稿 → Claude 生成计划 → Codex 开发 → PR → Claude 审查 → 合并部署
+   (输入)      (架构师)         (编码)     (提交)   (技术总监)    (发布)
+```
+
+### 快速开始 AI 工作流
+
+1. **📖 [快速开始指南](./docs/QUICK-START.md)** - 5分钟上手 AI 开发流程
+2. **📚 [完整工作流文档](./docs/AI-WORKFLOW.md)** - 详细的 AI 驱动开发指南
+3. **📋 [开发计划模板](./docs/templates/plan-template.md)** - Claude 生成计划的模板
+4. **🔌 [API 文档模板](./docs/templates/api-template.md)** - API 接口设计模板
+
+### AI 工具配置
+
+- **Claude Code CLI**: 用于架构设计、代码审查、部署检查
+- **Cursor/Copilot**: 用于具体代码实现
+- **GitHub Actions**: 自动化测试和部署
+
+---
 
 ## 项目结构
 
