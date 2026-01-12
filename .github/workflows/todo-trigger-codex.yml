@@ -1,0 +1,149 @@
+name: Todo Changed - Trigger Codex
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'todo.md'
+
+jobs:
+  notify-codex:
+    name: Notify Codex of Todo Changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # 需要获取前一次提交来比较差异
+
+      - name: Get changed tasks
+        id: changes
+        run: |
+          echo "Detecting changes in todo.md..."
+
+          # 获取本次提交中 todo.md 的变化
+          git diff HEAD~1 HEAD -- todo.md > todo_diff.txt
+
+          # 检查是否有变化
+          if [ -s todo_diff.txt ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Todo.md has changes"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes in todo.md"
+          fi
+
+      - name: Parse new tasks
+        if: steps.changes.outputs.has_changes == 'true'
+        id: parse
+        run: |
+          # 提取新增的任务（标记为"待开发"的任务）
+          # 这里简化处理，实际可以用更复杂的解析
+
+          echo "Parsing new tasks from todo.md..."
+
+          # 读取 todo.md 内容
+          NEW_TASKS=$(grep -A 20 "待开发" todo.md | head -50 || echo "")
+
+          if [ -n "$NEW_TASKS" ]; then
+            echo "found_tasks=true" >> $GITHUB_OUTPUT
+            echo "Found new tasks to develop"
+
+            # 保存任务信息供后续步骤使用
+            echo "$NEW_TASKS" > new_tasks.txt
+          else
+            echo "found_tasks=false" >> $GITHUB_OUTPUT
+            echo "No new tasks found"
+          fi
+
+      - name: Create Codex notification comment
+        if: steps.parse.outputs.found_tasks == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // 读取 todo.md 获取任务详情
+            const todoContent = fs.readFileSync('todo.md', 'utf8');
+
+            // 创建一个 issue 或评论来通知（这里创建 issue）
+            const issueBody = `## 🤖 Codex 开发任务通知
+
+            检测到 \`todo.md\` 有新的开发任务。
+
+            ### 📋 任务详情
+
+            请查看 [todo.md](../blob/${context.sha}/todo.md) 获取完整的任务描述。
+
+            ### 🚀 下一步
+
+            **Codex 请执行以下操作：**
+
+            1. 阅读 \`todo.md\` 中标记为 "待开发" 的任务
+            2. 分析任务需求
+            3. 创建开发分支：\`feature/task-[任务编号]-[简短描述]\`
+            4. 按照任务要求实现代码
+            5. 编写测试用例（覆盖率 > 80%）
+            6. 本地测试通过后提交 PR
+
+            ### 📝 开发规范
+
+            - 遵循 [CLAUDE.md](../blob/main/CLAUDE.md) 中的项目规范
+            - 参考 [开发计划模板](../blob/main/docs/templates/plan-template.md)
+            - 使用 TypeScript 严格模式
+            - 添加完整的错误处理
+
+            ### ✅ 提交要求
+
+            - Commit message 遵循 Conventional Commits
+            - PR 标题格式：\`feat: [任务标题] (#任务编号)\`
+            - 填写完整的 PR 模板
+            - 所有自动化检查通过
+
+            ---
+
+            **提交者**: @${context.actor}
+            **提交 SHA**: ${context.sha}
+            **时间**: ${new Date().toISOString()}
+            `;
+
+            // 创建 issue（标记为 codex 任务）
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🤖 [Codex] 新的开发任务',
+              body: issueBody,
+              labels: ['codex-task', 'auto-generated']
+            });
+
+      - name: Trigger Codex webhook (if configured)
+        if: steps.parse.outputs.found_tasks == 'true'
+        run: |
+          # 如果你有配置 Codex webhook，可以在这里触发
+          # 例如调用 Codex Cloud API
+
+          echo "Triggering Codex webhook..."
+
+          # 示例（需要替换为实际的 webhook URL 和 token）
+          # curl -X POST "https://codex-api.example.com/webhook" \
+          #   -H "Authorization: Bearer ${{ secrets.CODEX_TOKEN }}" \
+          #   -H "Content-Type: application/json" \
+          #   -d '{
+          #     "event": "todo_changed",
+          #     "repository": "${{ github.repository }}",
+          #     "file": "todo.md",
+          #     "commit": "${{ github.sha }}"
+          #   }'
+
+          echo "Webhook trigger completed (or skipped if not configured)"
+
+      - name: Upload todo.md as artifact
+        if: steps.changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: todo-md-${{ github.sha }}
+          path: todo.md
+          retention-days: 30
