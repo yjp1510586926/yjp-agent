@@ -222,7 +222,8 @@ yjp-agent/
 ### 核心文档
 1. **[todo.md](./todo.md)** ⭐ **最重要** - 在此添加开发任务
 2. **[AUTO-WORKFLOW.md](./docs/AUTO-WORKFLOW.md)** - 完整的自动化流程说明
-3. **[CLAUDE.md](./CLAUDE.md)** - 项目编码规范
+3. **[MONITORING.md](./docs/MONITORING.md)** 🔍 **实时监控** - 如何查看 AI 工作进度
+4. **[CLAUDE.md](./CLAUDE.md)** - 项目编码规范
 
 ### GitHub 配置
 - `.github/workflows/todo-trigger-codex.yml` - Codex 触发器配置
