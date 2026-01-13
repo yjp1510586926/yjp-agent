@@ -2,7 +2,7 @@ name: Codex Worker
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "todo.md" # 监听你的 todo.md
   workflow_dispatch:

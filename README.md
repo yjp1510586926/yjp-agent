@@ -37,6 +37,7 @@
 **优先级**: 🔴 高
 
 **状态**:
+
 - [x] 待开发
 - [ ] 开发中
 - [ ] 待审查
@@ -46,12 +47,14 @@
 作为用户，我希望能够使用邮箱和密码登录系统。
 
 **前端需求**:
+
 - [ ] 创建 Login.tsx 页面
 - [ ] 实现表单验证（邮箱格式、密码长度 >= 6）
 - [ ] 调用登录 API
 - [ ] 登录成功后保存 token 并跳转
 
 **后端需求**:
+
 - [ ] 实现 POST /api/auth/login
 - [ ] 验证用户密码（使用 bcrypt）
 - [ ] 生成 JWT token
@@ -63,6 +66,7 @@ POST /api/auth/login
 响应：{ "success": true, "data": { "token": "xxx", "user": {...} } }
 
 **验收标准**:
+
 - [ ] 能够正确登录
 - [ ] 密码错误显示提示
 - [ ] 测试覆盖率 > 80%
@@ -97,6 +101,7 @@ git push origin main
 ### 1. 任务触发
 
 当你提交 `todo.md` 到 Git 时：
+
 - GitHub Actions 自动检测文件变化
 - 解析新增的待开发任务
 - 创建 Codex 任务通知 Issue
@@ -104,6 +109,7 @@ git push origin main
 ### 2. Codex 自动开发
 
 Codex 接收到任务后：
+
 - 创建开发分支（`feature/task-N-description`）
 - 根据需求实现前后端代码
 - 编写完整的测试用例
@@ -112,6 +118,7 @@ Codex 接收到任务后：
 ### 3. 自动化质量检查
 
 PR 创建后自动运行：
+
 - ✅ **ESLint** - 代码格式检查
 - ✅ **TypeScript** - 类型检查
 - ✅ **Jest** - 单元测试（覆盖率 >= 80%）
@@ -121,6 +128,7 @@ PR 创建后自动运行：
 ### 4. Claude 自动审查
 
 质量检查通过后，Claude 自动审查：
+
 - 📋 **代码质量** - 是否符合项目规范
 - 🔒 **安全性** - SQL 注入、XSS、CSRF 等漏洞
 - ⚡ **性能** - 性能瓶颈、优化建议
@@ -128,6 +136,7 @@ PR 创建后自动运行：
 - 🏗️ **架构** - 架构设计合理性
 
 **审查决策：**
+
 - ✅ **APPROVE** - 通过，可以合并
 - 💬 **COMMENT** - 有建议，需要改进
 - ❌ **REQUEST_CHANGES** - 不通过，必须修改
@@ -135,6 +144,7 @@ PR 创建后自动运行：
 ### 5. 自动反馈循环
 
 如果审查不通过：
+
 1. Claude 在 PR 中评论具体问题
 2. Codex 检测反馈并修改代码
 3. 重新提交 PR
@@ -144,6 +154,7 @@ PR 创建后自动运行：
 ### 6. 合并与部署
 
 审查通过后：
+
 - 人工最终确认（推荐）或自动合并
 - 触发部署流程
 - 更新 `todo.md` 任务状态为"已完成"
@@ -199,18 +210,21 @@ yjp-agent/
 ## 🔧 技术栈
 
 ### 后端
+
 - **NestJS** - 渐进式 Node.js 框架
 - **TypeScript** - 类型安全
 - **Express** - HTTP 服务器
 - **Jest** - 测试框架
 
 ### 前端
+
 - **React 18** - UI 框架
 - **TypeScript** - 类型安全
 - **Axios** - HTTP 客户端
 - **React Testing Library** - 测试工具
 
 ### AI 工具
+
 - **Claude Code CLI** - 代码审查、架构设计
 - **Codex** - 自动编码实现
 - **GitHub Actions** - 自动化 CI/CD
@@ -220,12 +234,14 @@ yjp-agent/
 ## 📚 详细文档
 
 ### 核心文档
+
 1. **[todo.md](./todo.md)** ⭐ **最重要** - 在此添加开发任务
 2. **[AUTO-WORKFLOW.md](./docs/AUTO-WORKFLOW.md)** - 完整的自动化流程说明
 3. **[MONITORING.md](./docs/MONITORING.md)** 🔍 **实时监控** - 如何查看 AI 工作进度
 4. **[CLAUDE.md](./CLAUDE.md)** - 项目编码规范
 
 ### GitHub 配置
+
 - `.github/workflows/todo-trigger-codex.yml` - Codex 触发器配置
 - `.github/workflows/claude-auto-review.yml` - Claude 审查配置
 - `.github/workflows/pr-check.yml` - 质量检查配置
@@ -237,15 +253,18 @@ yjp-agent/
 ### ✅ DO（推荐做法）
 
 1. **详细描述需求**
+
    - 包含前后端需求
    - 提供 API 接口设计
    - 明确验收标准
 
 2. **一次一个任务**
+
    - 避免同时添加多个复杂任务
    - 让 AI 专注完成一个功能
 
 3. **及时更新状态**
+
    - 任务状态：待开发 → 开发中 → 待审查 → 已完成
 
 4. **监控流程**
@@ -255,10 +274,12 @@ yjp-agent/
 ### ❌ DON'T（避免做法）
 
 1. **模糊的需求描述**
+
    - ❌ "做个登录功能"
    - ✅ "实现邮箱密码登录，包含表单验证、JWT 认证..."
 
 2. **跳过验收标准**
+
    - AI 需要明确的验收标准来判断任务完成
 
 3. **忽略审查反馈**
@@ -269,6 +290,7 @@ yjp-agent/
 ## 🚦 项目命令
 
 ### 安装依赖
+
 ```bash
 # 安装所有依赖（前端 + 后端）
 npm run install:all
@@ -279,6 +301,7 @@ cd client && npm install
 ```
 
 ### 开发模式
+
 ```bash
 # 启动后端（终端 1）
 npm run dev:server
@@ -292,6 +315,7 @@ cd client && npm start
 ```
 
 ### 运行测试
+
 ```bash
 # 后端测试
 cd server && npm test
@@ -305,6 +329,7 @@ cd client && npm run test:coverage
 ```
 
 ### 代码检查
+
 ```bash
 # Lint 检查
 cd server && npm run lint
@@ -316,6 +341,7 @@ cd client && npm run lint:fix
 ```
 
 ### 构建
+
 ```bash
 # 构建后端
 npm run build:server
@@ -331,11 +357,13 @@ npm run build:client
 ### Codex 没有开始开发
 
 **检查：**
+
 1. `todo.md` 是否正确提交到 main/develop 分支
 2. GitHub Actions 是否成功运行
 3. Codex Issue 是否创建
 
 **解决：**
+
 ```bash
 # 查看 GitHub Actions
 仓库 → Actions 标签 → 查看 "Todo Changed" workflow
@@ -349,6 +377,7 @@ npm run build:client
 这是正常的，默认需要人工最终确认。
 
 如需手动审查：
+
 ```bash
 # 在本地使用 Claude Code CLI
 claude
@@ -383,17 +412,20 @@ npx tsc --noEmit  # 修复类型错误
 **优先级**: 🔴 高
 
 **状态**:
+
 - [x] 待开发
 
 **需求描述**:
 作为新用户，我希望能够注册账号。
 
 **前端需求**:
+
 - [ ] 创建 Register.tsx 页面
 - [ ] 表单：用户名、邮箱、密码、确认密码
 - [ ] 验证：用户名 2-20 字符，邮箱格式，密码 >= 8 位
 
 **后端需求**:
+
 - [ ] POST /api/users/register
 - [ ] 检查邮箱是否已存在
 - [ ] 密码加密（bcrypt）
@@ -406,14 +438,15 @@ POST /api/users/register
 
 **数据库设计**:
 CREATE TABLE users (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(50) UNIQUE NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+id INT PRIMARY KEY AUTO_INCREMENT,
+username VARCHAR(50) UNIQUE NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL,
+password_hash VARCHAR(255) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 **验收标准**:
+
 - [ ] 能够成功注册
 - [ ] 重复邮箱提示错误
 - [ ] 密码正确加密
@@ -421,6 +454,7 @@ CREATE TABLE users (
 ```
 
 #### 2. 提交
+
 ```bash
 git add todo.md
 git commit -m "docs: 添加用户注册功能开发任务"
@@ -477,3 +511,22 @@ ISC
 ---
 
 **🚀 开始你的 AI 驱动开发之旅吧！**
+
+<!-- 请扮演项目的主审查员 (Lead Reviewer)，我们需要启动自动化的 "Codex 验收闭环"。
+
+请开始执行以下循环监控任务（如果当前无 PR，请每隔一段时间再次检查）：
+
+1. **监测 PR**：使用 GitHub 工具列出所有 Open 状态的 Pull Request (重点关注由 Codex 提交的)。
+2. **执行审查**：如果发现未处理的新 PR，请读取其文件变动 (Diff) 进行代码审查。
+3. **决策与反馈**：
+   - ✅ **通过 (Pass)**：
+     1. 合并 (Merge) 该 PR。
+     2. 修改 [todo.md](yjp-agent/todo.md)，将对应任务的状态标记为 `[x] 已完成`。
+     3. 提交并推送 [todo.md](yjp-agent/todo.md) 的更改。
+   - ❌ **打回 (Request Changes)**：
+     1. **不要合并**。
+     2. 修改 [todo.md](yjp-agent/todo.md)，保持任务状态为 `[ ] 待开发`。
+     3. 在该任务描述下方追加一行：`**Review Feedback**: [你的具体修改建议和Bug报告]`。
+     4. 提交并推送 [todo.md](yjp-agent/todo.md) 的更改（这将自动触发 Codex 读取反馈并返工）。
+
+现在，请检查是否有等待审查的 PR。 -->
