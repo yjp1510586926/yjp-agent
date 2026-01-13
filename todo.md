@@ -171,3 +171,70 @@
 6. 添加响应式样式支持（使用 CSS media query 或内联样式）
 
 **请重新实现，修复以上所有问题。Codex 会在下次运行时读取此反馈并进行修复。**
+
+---
+
+**Review Feedback #2** (PR #codex/solve-1768272648 - 仍然不通过):
+
+🔴 **核心问题依然存在**:
+
+1. **仍然提交了调试文件** ❌
+   - 第二次 PR 依然包含 `full_prompt.txt`, `payload.json`, `response.json`
+   - 这些文件**绝对不能**提交到仓库
+   - **关键问题**: 你的 workflow 配置有问题，需要在 git add 之前删除这些文件
+
+2. **仍然没有创建实际代码文件** ❌ **CRITICAL**
+   - response.json 中有代码内容，但没有实际的 `client/src/components/UserProfile.tsx` 文件
+   - response.json 中有 CSS 内容，但没有实际的 `client/src/components/UserProfile.css` 文件
+   - **根本原因**: GitHub Actions workflow 的 "Apply Codex Solutions" 步骤没有正确执行
+   - **检查点**:
+     - 文件路径格式是否正确？必须是 `### FILE: client/src/components/UserProfile.tsx`
+     - 文件结束标记是否正确？必须是 `### END_FILE`
+     - JavaScript 脚本是否正确解析了 response.json？
+
+3. **组件仍然缺少社交链接图标** ⚠️
+   - response.json 中的代码没有包含 GitHub 和 Twitter 图标
+   - 需求明确要求：「下方有一排社交链接图标 (GitHub, Twitter)」
+   - **要求**: 添加社交链接图标功能
+
+4. **响应式设计不完整** ⚠️
+   - CSS 中缺少 media query
+   - 需求要求：手机端占满宽度，桌面端宽度固定 300px
+   - 当前 `max-width: 520px` 不符合要求
+
+**🔧 关键修复步骤**:
+
+**步骤 1: 修复 workflow（最重要）**
+检查 `.github/workflows/codex-worker.yml` 的 "Apply Codex Solutions" 步骤：
+- 确保 fileRegex 正确匹配文件块
+- 确保 fs.writeFileSync 被正确调用
+- 添加日志输出以调试
+
+**步骤 2: 添加 .gitignore**
+创建或修改 `.gitignore` 文件，添加：
+```
+full_prompt.txt
+payload.json
+response.json
+```
+
+**步骤 3: 完善组件代码**
+在生成代码时包含：
+- 社交链接图标（使用 SVG 或 icon library）
+- 响应式 media query
+- 完整的 TypeScript 类型定义
+
+**步骤 4: 正确的提交流程**
+```bash
+# 1. 删除调试文件
+rm -f full_prompt.txt payload.json response.json
+
+# 2. 只添加代码文件
+git add client/src/components/UserProfile.tsx
+git add client/src/components/UserProfile.css
+
+# 3. 提交
+git commit -m "feat: add UserProfile component with social links"
+```
+
+**❗ 如果这次还是没有创建实际文件，说明 workflow 脚本有 BUG，需要修复 JavaScript 文件解析逻辑！**
