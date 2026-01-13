@@ -1,0 +1,76 @@
+{
+  "id": "resp_0b41290baabd336f006965a83a7f988191a40d6f243e202df7",
+  "object": "response",
+  "created_at": 1768269882,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768269930,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_0b41290baabd336f006965a83ae01c819194f5fe098df7e58f",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_0b41290baabd336f006965a86185ec8191a54db5b84cc9fe9d",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: server/src/main.ts\n\nimport { NestFactory } from '@nestjs/core';\nimport { AppModule } from './app.module';\n\nasync function bootstrap() {\n  const app = await NestFactory.create(AppModule);\n  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;\n  await app.listen(port);\n  console.log(`Server listening on http://localhost:${port}`);\n}\nbootstrap();\n\n### END_FILE\n\n### FILE: server/src/app.module.ts\n\nimport { Module } from '@nestjs/common';\nimport { AppController } from './app.controller';\nimport { AppService } from './app.service';\nimport { TodoModule } from './todo/todo.module';\n\n@Module({\n  imports: [TodoModule],\n  controllers: [AppController],\n  providers: [AppService],\n})\nexport class AppModule {}\n\n### END_FILE\n\n### FILE: server/src/todo/todo.controller.ts\n\nimport { Controller, Get } from '@nestjs/common';\nimport { TodoService } from './todo.service';\n\n@Controller('api/todo')\nexport class TodoController {\n  constructor(private readonly todoService: TodoService) {}\n\n  @Get()\n  async getTodos() {\n    return this.todoService.getTodos();\n  }\n}\n\n### END_FILE\n\n### FILE: server/src/todo/todo.service.ts\n\nimport { Injectable } from '@nestjs/common';\nimport { promises as fs } from 'fs';\nimport * as path from 'path';\n\ninterface TodoItem {\n  id: string;\n  text: string;\n  done: boolean;\n}\n\n@Injectable()\nexport class TodoService {\n  private cache: TodoItem[] | null = null;\n\n  async getTodos(): Promise<TodoItem[]> {\n    if (this.cache) return this.cache;\n\n    // Assume todo.md is located at repository root\n    const todoPath = path.resolve(process.cwd(), '..', 'todo.md');\n    try {\n      const content = await fs.readFile(todoPath, 'utf8');\n      const items = this.parse(content);\n      this.cache = items;\n      return items;\n    } catch (err) {\n      // If file not found or read error, return empty list\n      this.cache = [];\n      return [];\n    }\n  }\n\n  private parse(content: string): TodoItem[] {\n    const lines = content.split(/\\r?\\n/);\n    const items: TodoItem[] = [];\n    let idCounter = 1;\n    for (const line of lines) {\n      // Matches: \"- [ ] Task\" or \"- [x] Task\"\n      const m = line.match(/^- \\[([\\sxX])\\]\\s*(.*)$/);\n      if (m) {\n        const done = m[1].toLowerCase() === 'x';\n        const text = m[2].trim();\n        if (text.length > 0) {\n          items.push({ id: `todo-${idCounter++}`, text, done });\n        }\n      }\n    }\n    return items;\n  }\n}\n\n### END_FILE\n\n### FILE: server/src/todo/todo.module.ts\n\nimport { Module } from '@nestjs/common';\nimport { TodoController } from './todo.controller';\nimport { TodoService } from './todo.service';\n\n@Module({\n  controllers: [TodoController],\n  providers: [TodoService],\n})\nexport class TodoModule {}\n\n### END_FILE\n\n### FILE: client/src/App.tsx\n\nimport React, { useEffect, useState } from 'react';\nimport './App.css';\n\ntype TodoItem = { id: string; text: string; done: boolean };\n\nconst App: React.FC = () => {\n  const [items, setItems] = useState<TodoItem[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n\n  useEffect(() => {\n    fetch('/api/todo')\n      .then((res) => {\n        if (!res.ok) throw new Error('Network response was not ok');\n        return res.json();\n      })\n      .then((data: TodoItem[]) => {\n        setItems(data);\n        setLoading(false);\n      })\n      .catch((e) => {\n        setError((e as Error).message);\n        setLoading(false);\n      });\n  }, []);\n\n  return (\n    <div className=\"App\">\n      <header className=\"App-header\">\n        <h1>Web3 Fullstack Demo</h1>\n      </header>\n      <section>\n        <h2>TODO (from server)</h2>\n        {loading && <p>Loading...</p>}\n        {error && <p style={{ color: 'red' }}>Error: {error}</p>}\n        {!loading && !error && (\n          <ul>\n            {items.map((it) => (\n              <li key={it.id}>\n                <input type=\"checkbox\" checked={it.done} readOnly /> {it.text}\n              </li>\n            ))}\n          </ul>\n        )}\n      </section>\n    </div>\n  );\n};\n\nexport default App;\n\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1228,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 5718,
+    "output_tokens_details": {
+      "reasoning_tokens": 4672
+    },
+    "total_tokens": 6946
+  },
+  "user": null,
+  "metadata": {}
+}
