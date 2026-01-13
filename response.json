@@ -1,0 +1,76 @@
+{
+  "id": "resp_04127eb77add07f6006965b3092c50819c9d0212d9401cc8d4",
+  "object": "response",
+  "created_at": 1768272649,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768272664,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_04127eb77add07f6006965b30974d0819c8f0dd5039338914b",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_04127eb77add07f6006965b312405c819c9b76ef95cbda8dda",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: client/src/components/UserProfile.tsx\n\nimport React from 'react';\nimport './UserProfile.css';\n\ntype User = {\n  avatar?: string;\n  username: string;\n  profession?: string;\n  bio?: string;\n};\n\ninterface UserProfileProps {\n  user: User;\n  size?: number; // avatar diameter in px\n}\n\nconst UserProfile: React.FC<UserProfileProps> = ({ user, size = 64 }) => {\n  const { avatar, username, profession, bio } = user;\n\n  // Generate initials for fallback avatar\n  const initials = username\n    .split(' ')\n    .map((n) => n.charAt(0))\n    .slice(0, 2)\n    .join('')\n    .toUpperCase();\n\n  const avatarStyle: React.CSSProperties = {\n    width: size,\n    height: size,\n  };\n\n  return (\n    <div className=\"user-profile-card\" role=\"group\" aria-label={`\u7528\u6237\u8d44\u6599\uff1a${username}`}>\n      <div className=\"user-avatar\" style={avatarStyle}>\n        {avatar ? (\n          <img src={avatar} alt={username} />\n        ) : (\n          <div className=\"avatar-initials\" aria-label=\"\u5934\u50cf\u521d\u59cb\u5b57\u6bcd\">\n            {initials}\n          </div>\n        )}\n      </div>\n      <div className=\"user-info\">\n        <div className=\"user-name\">{username}</div>\n        {profession && <div className=\"user-profession\">{profession}</div>}\n        {bio && <div className=\"user-bio\">{bio}</div>}\n      </div>\n    </div>\n  );\n};\n\nexport default UserProfile;\n\n### FILE: client/src/components/UserProfile.css\n\n.user-profile-card {\n  display: flex;\n  align-items: center;\n  gap: 16px;\n  padding: 14px 16px;\n  border-radius: 12px;\n  background: #ffffff;\n  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);\n  max-width: 520px;\n}\n\n.user-avatar {\n  border-radius: 50%;\n  overflow: hidden;\n  background: #e6e6e6;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.user-avatar img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  display: block;\n}\n\n.avatar-initials {\n  width: 100%;\n  height: 100%;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  color: #ffffff;\n  background: linear-gradient(135deg, #667eea 0%, #764ba9 100%);\n  font-weight: 700;\n  font-size: 1rem;\n  user-select: none;\n}\n\n.user-info {\n  display: flex;\n  flex-direction: column;\n}\n\n.user-name {\n  font-weight: 700;\n  font-size: 1.05rem;\n  margin-bottom: 4px;\n  color: #111;\n}\n\n.user-profession {\n  font-size: 0.9rem;\n  color: #666;\n  margin-bottom: 6px;\n}\n\n.user-bio {\n  font-size: 0.88rem;\n  color: #555;\n} \n\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1346,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 1795,
+    "output_tokens_details": {
+      "reasoning_tokens": 1088
+    },
+    "total_tokens": 3141
+  },
+  "user": null,
+  "metadata": {}
+}
