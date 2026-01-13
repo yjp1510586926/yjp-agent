@@ -1,0 +1,76 @@
+{
+  "id": "resp_06cda7eaafa7b4db006965b04e37d08196acd146f6017642ed",
+  "object": "response",
+  "created_at": 1768271950,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768271965,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_06cda7eaafa7b4db006965b04e9e648196bcf4585c7fe35933",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_06cda7eaafa7b4db006965b05942b881969556f450bb432653",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: client/src/components/UserProfile.tsx\n\nimport React from 'react';\n\ntype UserProfileProps = {\n  avatar?: string;\n  username: string;\n  occupation?: string;\n  bio?: string;\n};\n\nconst cardStyle: React.CSSProperties = {\n  display: 'flex',\n  alignItems: 'center',\n  padding: '16px',\n  borderRadius: '12px',\n  background: '#fff',\n  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',\n  border: '1px solid #eee',\n  maxWidth: '420px'\n};\n\nconst avatarStyle: React.CSSProperties = {\n  width: '64px',\n  height: '64px',\n  borderRadius: '50%',\n  objectFit: 'cover',\n  marginRight: '16px',\n  background: '#ddd'\n};\n\nconst contentStyle: React.CSSProperties = {\n  display: 'flex',\n  flexDirection: 'column'\n};\n\nconst usernameStyle: React.CSSProperties = {\n  fontSize: '18px',\n  fontWeight: 600,\n  margin: 0\n};\n\nconst occupationStyle: React.CSSProperties = {\n  fontSize: '14px',\n  color: '#666',\n  marginTop: '4px'\n};\n\nconst bioStyle: React.CSSProperties = {\n  fontSize: '13px',\n  color: '#555',\n  marginTop: '6px',\n  lineHeight: 1.4\n};\n\nconst UserProfile: React.FC<UserProfileProps> = ({ avatar, username, occupation, bio }) => {\n  return (\n    <div style={cardStyle} aria-label={`User profile: ${username}`}>\n      <img\n        src={avatar || 'https://via.placeholder.com/64'}\n        alt={`${username} avatar`}\n        style={avatarStyle}\n      />\n      <div style={contentStyle}>\n        <p style={usernameStyle}>{username}</p>\n        {occupation && <span style={occupationStyle}>{occupation}</span>}\n        {bio && <span style={bioStyle}>{bio}</span>}\n      </div>\n    </div>\n  );\n};\n\nexport default UserProfile;\n\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1346,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 1803,
+    "output_tokens_details": {
+      "reasoning_tokens": 1344
+    },
+    "total_tokens": 3149
+  },
+  "user": null,
+  "metadata": {}
+}
