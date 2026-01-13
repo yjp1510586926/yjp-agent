@@ -1,0 +1,76 @@
+{
+  "id": "resp_07ac9cf7e83d7c7d006965b49532e88191a5b04886a7ddb25e",
+  "object": "response",
+  "created_at": 1768273045,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1768273057,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_07ac9cf7e83d7c7d006965b49597d08191884d7522ee5d246c",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_07ac9cf7e83d7c7d006965b49cd00c8191a50c3de419fdefdc",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "### FILE: client/src/components/UserProfile.tsx\n\nimport React from 'react';\n\ntype UserProfileProps = {\n  avatarUrl?: string;\n  username: string;\n  profession?: string;\n  bio?: string;\n  size?: number; // avatar size in pixels\n};\n\nconst UserProfile: React.FC<UserProfileProps> = ({\n  avatarUrl,\n  username,\n  profession,\n  bio,\n  size = 64,\n}) => {\n  const avatarStyle: React.CSSProperties = {\n    width: size,\n    height: size,\n    borderRadius: '50%',\n    objectFit: 'cover',\n    backgroundColor: '#eaeaea',\n    display: 'block',\n  };\n\n  const containerStyle: React.CSSProperties = {\n    display: 'flex',\n    alignItems: 'center',\n    padding: 16,\n    borderRadius: 12,\n    background: '#ffffff',\n    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.08)',\n    maxWidth: 520,\n  };\n\n  const textContainerStyle: React.CSSProperties = {\n    marginLeft: 16,\n  };\n\n  const usernameStyle: React.CSSProperties = {\n    margin: 0,\n    fontSize: 18,\n    fontWeight: 600,\n  };\n\n  const professionStyle: React.CSSProperties = {\n    margin: '4px 0 8px 0',\n    color: '#6b7280',\n    fontSize: 14,\n  };\n\n  const bioStyle: React.CSSProperties = {\n    margin: 0,\n    color: '#374151',\n    fontSize: 13,\n    lineHeight: 1.4,\n  };\n\n  return (\n    <div style={containerStyle}>\n      {avatarUrl ? (\n        <img src={avatarUrl} alt={username} style={avatarStyle} />\n      ) : (\n        <div\n          aria-label=\"avatar placeholder\"\n          style={{\n            ...avatarStyle,\n            display: 'flex',\n            alignItems: 'center',\n            justifyContent: 'center',\n            color: '#6b7280',\n            fontWeight: 600,\n          }}\n        >\n          {username.charAt(0).toUpperCase()}\n        </div>\n      )}\n      <div style={textContainerStyle}>\n        <p style={usernameStyle}>{username}</p>\n        {profession && <p style={professionStyle}>{profession}</p>}\n        {bio && <p style={bioStyle}>{bio}</p>}\n      </div>\n    </div>\n  );\n};\n\nexport default UserProfile;\n### END_FILE"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1346,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 1442,
+    "output_tokens_details": {
+      "reasoning_tokens": 896
+    },
+    "total_tokens": 2788
+  },
+  "user": null,
+  "metadata": {}
+}
