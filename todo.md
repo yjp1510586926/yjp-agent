@@ -119,15 +119,17 @@
 开发一个展示用户基本信息的卡片组件。
 
 **前端需求**:
+
 - [ ] 路径: `client/src/components/UserProfile.tsx`
 - [ ] 展示信息: 头像 (Avatar)、用户名、职业、简介
 - [ ] 样式:
-    - 圆角卡片，有阴影
-    - 头像居中
-    - 下方有一排社交链接图标 (GitHub, Twitter)
+  - 圆角卡片，有阴影
+  - 头像居中
+  - 下方有一排社交链接图标 (GitHub, Twitter)
 - [ ] 响应式: 手机端占满宽度，桌面端宽度固定 300px
 
 **验收标准**:
+
 - [ ] 组件渲染正常
 - [ ] 样式美观，符合描述
 
@@ -136,24 +138,29 @@
 🔴 **严重问题需要修复**:
 
 1. **删除了其他待开发任务** ❌
+
    - 你的提交删除了任务 3-8（共 6 个任务）：首页轮播图、后端健康检查、页脚、按钮组件、导航栏、字符串转换接口
    - 这些任务仍然是待开发状态，不应该被删除
    - **要求**: 恢复所有原有任务 3-8，保留它们在 todo.md 中
 
 2. **未实际创建代码文件** ❌
+
    - 虽然在 response.json 中有代码内容，但没有真正创建 `client/src/components/UserProfile.tsx` 文件
    - **要求**: 必须实际创建 .tsx 文件并提交到仓库
    - **要求**: 确保组件代码符合 React + TypeScript 最佳实践
 
 3. **提交了不应该的调试文件** ❌
+
    - `full_prompt.txt`, `payload.json`, `response.json` 不应该提交到版本库
    - **要求**: 从仓库中删除这些文件，并将它们添加到 .gitignore
 
 4. **README.md 被错误修改** ❌
+
    - 在 README.md 末尾添加了 HTML 注释（审查员指令）
    - **要求**: 撤销对 README.md 的所有修改，它与任务 9 无关
 
 5. **组件设计不完整** ⚠️
+
    - 当前设计缺少社交链接图标 (GitHub, Twitter)
    - 响应式样式没有完整实现（需要 media query）
    - **要求**: 完整实现所有前端需求中的功能点
@@ -163,6 +170,7 @@
    - **要求**: 恢复 todo.md 的完整结构
 
 **正确的实现方式**:
+
 1. 恢复 todo.md 到原始状态（包含所有任务 3-8 和原有结构）
 2. 只创建 `client/src/components/UserProfile.tsx` 文件
 3. 删除调试文件 (full_prompt.txt, payload.json, response.json)
@@ -179,11 +187,13 @@
 🔴 **核心问题依然存在**:
 
 1. **仍然提交了调试文件** ❌
+
    - 第二次 PR 依然包含 `full_prompt.txt`, `payload.json`, `response.json`
    - 这些文件**绝对不能**提交到仓库
    - **关键问题**: 你的 workflow 配置有问题，需要在 git add 之前删除这些文件
 
 2. **仍然没有创建实际代码文件** ❌ **CRITICAL**
+
    - response.json 中有代码内容，但没有实际的 `client/src/components/UserProfile.tsx` 文件
    - response.json 中有 CSS 内容，但没有实际的 `client/src/components/UserProfile.css` 文件
    - **根本原因**: GitHub Actions workflow 的 "Apply Codex Solutions" 步骤没有正确执行
@@ -193,6 +203,7 @@
      - JavaScript 脚本是否正确解析了 response.json？
 
 3. **组件仍然缺少社交链接图标** ⚠️
+
    - response.json 中的代码没有包含 GitHub 和 Twitter 图标
    - 需求明确要求：「下方有一排社交链接图标 (GitHub, Twitter)」
    - **要求**: 添加社交链接图标功能
@@ -206,12 +217,14 @@
 
 **步骤 1: 修复 workflow（最重要）**
 检查 `.github/workflows/codex-worker.yml` 的 "Apply Codex Solutions" 步骤：
+
 - 确保 fileRegex 正确匹配文件块
 - 确保 fs.writeFileSync 被正确调用
 - 添加日志输出以调试
 
 **步骤 2: 添加 .gitignore**
 创建或修改 `.gitignore` 文件，添加：
+
 ```
 full_prompt.txt
 payload.json
@@ -220,11 +233,13 @@ response.json
 
 **步骤 3: 完善组件代码**
 在生成代码时包含：
+
 - 社交链接图标（使用 SVG 或 icon library）
 - 响应式 media query
 - 完整的 TypeScript 类型定义
 
 **步骤 4: 正确的提交流程**
+
 ```bash
 # 1. 删除调试文件
 rm -f full_prompt.txt payload.json response.json
@@ -238,3 +253,5 @@ git commit -m "feat: add UserProfile component with social links"
 ```
 
 **❗ 如果这次还是没有创建实际文件，说明 workflow 脚本有 BUG，需要修复 JavaScript 文件解析逻辑！**
+
+---
