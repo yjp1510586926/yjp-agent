@@ -78,6 +78,7 @@
 【项目结构】
 
 .
+./response.json
 ./server
 ./server/nest-cli.json
 ./server/package.json
@@ -115,6 +116,7 @@
 ./full_prompt.txt
 ./package.json
 ./CLAUDE.md
+./payload.json
 ### READ_ONLY_FILE: package.json
 {
   "name": "yjp-agent",
