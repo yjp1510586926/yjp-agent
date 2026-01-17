@@ -42,3 +42,8 @@ yarn-error.log*
 *.pid
 *.seed
 *.pid.lock
+
+# AI Worker Temporary Files
+full_prompt.txt
+payload.json
+response.json

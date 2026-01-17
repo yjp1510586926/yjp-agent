@@ -72,13 +72,24 @@ jobs:
 
           # 构造 Payload
           jq -n \
-            --arg model "gpt-5-nano" \
-            --rawfile input full_prompt.txt \
-            --argjson store true \
-            '{model: $model, input: $input, store: $store}' > payload.json
+            --arg model "gpt-4o" \
+            --rawfile prompt full_prompt.txt \
+            '{
+              model: $model, 
+              messages: [
+                {
+                  role: "system", 
+                  content: "You are an autonomous AI software engineer. Follow the instructions in the prompt strictly. Always output file content wrapped in ### FILE: path/to/file and ### END_FILE blocks."
+                },
+                {
+                  role: "user", 
+                  content: $prompt
+                }
+              ]
+            }' > payload.json
             
           # 调用 API
-          curl https://api.openai.com/v1/responses \
+          curl https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -d @payload.json > response.json
